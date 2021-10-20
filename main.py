@@ -22,6 +22,85 @@ def read_list2():
         lst2.append(x)
     return lst2
 
+
+def concateneaza_numerele(nr1, nr2):
+    """
+    Determina numarul obtinut prin concatenarea nr1 cu nr2
+    :param nr1: numar intreg
+    :param nr2: numar intreg
+    :return: numar intreg
+    """
+    #le concatenez (fac o metoda care sa includa si cazul nr1=360, nr2=63 de ex)
+    nr_nou=nr1
+    #formez invers pentru nr 2
+    invers_nr2=0
+    while nr2 !=0:
+        invers_nr2 = invers_nr2 * 10 + int(nr2 % 10)
+        nr2 //=10
+    #concatenez nr1 cu inversul nr2
+    while invers_nr2 != 0:
+        nr_nou= nr_nou*10 + int(invers_nr2 % 10)
+        invers_nr2 //= 10
+    return nr_nou
+
+def test_concateneaza_numerele():
+    assert concateneaza_numerele(1245, 6789) == 12456789
+    assert concateneaza_numerele(1,12) == 112
+    assert concateneaza_numerele(2,2) == 22
+    assert concateneaza_numerele(132, 234) == 132234
+
+test_concateneaza_numerele()
+
+def verif_palindrom(nr1, nr2):
+    """
+    verificam daca numarul formal e egal cu oglinditul sau
+    :param nr1: numar intreg
+    :param nr2: numar intreg
+    :return: True daca numarul obtinut este palindrom, false alfel
+    """
+    nr_nou= concateneaza_numerele(nr1, nr2)
+    #verific daca nr format e egal cu oglinditul sau
+    invers_nr_nou=0
+    copie_nr_nou=nr_nou
+    while copie_nr_nou != 0:
+        invers_nr_nou = invers_nr_nou * 10 + int(copie_nr_nou % 10)
+        copie_nr_nou //= 10
+    return invers_nr_nou == nr_nou
+
+def test_verif_palindrom():
+    assert verif_palindrom(360, 63) == True
+    assert verif_palindrom(1, 1) == True
+    assert verif_palindrom(10, 1) == True
+    assert verif_palindrom(234, 764) == False
+
+test_verif_palindrom()
+
+def palindroame_obtinute(lst1, lst2):
+    """
+    Afisarea tuturor palindroamelor obtinute prin concatenarea elementelor de pe
+    aceleași poziții în lst1 si lst2.
+    :param lst1: prima lista de numere intregi
+    :param lst2: a doua lista de numere intregi
+    :return:
+    """
+    palindroame=[]
+    if len(lst1) > len(lst2):
+        for i in range(0, len(lst2)):
+            if verif_palindrom(lst1[i], lst2[i]) == 1:
+                palindroame.append(concateneaza_numerele(lst1[i], lst2[i]))
+    else:
+        for i in range(0, len(lst1)):
+            if verif_palindrom(lst1[i], lst2[i]) == 1:
+                palindroame.append(concateneaza_numerele(lst1[i], lst2[i]))
+    return palindroame
+
+def test_palindroame_obtinute():
+    assert palindroame_obtinute([12, 22, 36, 11], [21, 23, 63, 55, 424]) == [1221, 3663]
+    assert palindroame_obtinute([133, 22, 36, 11], [331, 23, 63, 55, 424]) == [133331, 3663]
+    assert palindroame_obtinute([143, 22, 78], [23, 63, 55, 424]) == []
+
+test_palindroame_obtinute()
+
 def intersectia_listelor(lst1, lst2):
     """
     Determina o listă care reprezinta intersecția dintre lst1 si lst2.
@@ -104,8 +183,10 @@ def main():
         elif cmd=='3':
             rez = intersectia_listelor(lst1, lst2)
             print(rez)
-        elif cmd=='4':
             pass
+        elif cmd=='4':
+            rez = palindroame_obtinute(lst1, lst2)
+            print(rez)
         elif cmd=='5':
             pass
         elif cmd=='6':
